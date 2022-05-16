@@ -3,20 +3,18 @@ import os
 
 class PdfReader:
     def __init__(self, input_files: list[str]):
-        pdf_data = {}
-        self.input_files = input_files
+        self.input_files = input_files        
+        self.pdf_data = {}
         
+    def read_pdfs(self) -> dict:
         for input_file in self.input_files:
             output_file = self.convert_to_csv(input_file)
             dict_, participant = self.read_csv(output_file)
             profile, condition_symptoms = self.get_conditions_symptoms(dict_)
-            for i in [profile, condition_symptoms, participant]:
-                print(i)
-            pdf_data[participant] = {"condition_symptoms": condition_symptoms, "profile": profile}
+            self.pdf_data[participant] = {"condition_symptoms": condition_symptoms, "profile": profile}
             os.remove(output_file)
-            # self.make_csv(profile, condition_symptoms, input_file, participant)
+        return self.pdf_data
         
-        return pdf_data
         
     def convert_to_csv(self, input_file):
         out = input_file.split(".")[0] + "_out" + "." + input_file.split(".")[1]

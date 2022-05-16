@@ -1,0 +1,51 @@
+## ENSEMBL VARIANT EFFECT PREDICTOR v105.0
+## Output produced at 2022-04-25 08:36:27
+## Using cache in /opt/vep/.vep/homo_sapiens/105_GRCh38
+## Using API version 105, DB version ?
+## ensembl-variation version 105.ac8178e
+## ensembl-funcgen version 105.660df8f
+## ensembl version 105.525fbcb
+## ensembl-io version 105.2a0a40c
+## ClinVar version 202106
+## gnomAD version r2.1.1
+## regbuild version 1.0
+## 1000genomes version phase3
+## gencode version GENCODE 39
+## genebuild version 2014-07
+## polyphen version 2.2.2
+## dbSNP version 154
+## sift version sift5.2.2
+## assembly version GRCh38.p13
+## HGMD-PUBLIC version 20204
+## COSMIC version 92
+## ESP version V2-SSA137
+## Column descriptions:
+## Uploaded_variation : Identifier of uploaded variant
+## Location : Location of variant in standard coordinate format (chr:start or chr:start-end)
+## Allele : The variant allele used to calculate the consequence
+## Gene : Stable ID of affected gene
+## Feature : Stable ID of feature
+## Feature_type : Type of feature - Transcript, RegulatoryFeature or MotifFeature
+## Consequence : Consequence type
+## cDNA_position : Relative position of base pair in cDNA sequence
+## CDS_position : Relative position of base pair in coding sequence
+## Protein_position : Relative position of amino acid in protein
+## Amino_acids : Reference and variant amino acids
+## Codons : Reference and variant codon sequence
+## Existing_variation : Identifier(s) of co-located known variants
+## Extra column keys:
+## IMPACT : Subjective impact classification of consequence type
+## DISTANCE : Shortest distance from variant to transcript
+## STRAND : Strand of the feature (1/-1)
+## FLAGS : Transcript quality flags
+#Uploaded_variation	Location	Allele	Gene	Feature	Feature_type	Consequence	cDNA_position	CDS_position	Protein_position	Amino_acids	Codons	Existing_variation	Extra
+chr21_14964728_T/G	chr21:14964728	G	ENSG00000180530	ENST00000400199	Transcript	missense_variant	4069	3465	1155	K/N	aaA/aaC	-	IMPACT=MODERATE;STRAND=-1
+chr21_14964728_T/G	chr21:14964728	G	ENSG00000180530	ENST00000400199	Transcript	missense_variant	4069	3465	1155	K/N	aaA/aaC	-	IMPACT=MODERATE;STRAND=-1
+chr21_37486542_A/C	chr21:37486542	C	ENSG00000157540	ENST00000643624	Transcript	missense_variant	765	565	189	N/H	Aat/Cat	-	IMPACT=MODERATE;STRAND=1
+chr21_41377030_G/A	chr21:41377030	A	ENSG00000183486	ENST00000330714	Transcript	missense_variant	224	124	42	E/K	Gaa/Aaa	-	IMPACT=MODERATE;STRAND=1
+chr21_44395414_G/A	chr21:44395414	A	ENSG00000142185	ENST00000300481	Transcript	missense_variant,splice_region_variant	1748	1735	579	V/M	Gtg/Atg	-	IMPACT=MODERATE;STRAND=1
+chr21_41377132_-/A	chr21:41377131-41377132	A	ENSG00000183486	ENST00000418103	Transcript	frameshift_variant,NMD_transcript_variant	561-562	225-226	75-76	-/X	-/A	-	IMPACT=HIGH;STRAND=1
+chr21_32699959_-/AAAAAAA	chr21:32699958-32699959	AAAAAAA	ENSG00000159082	ENST00000433931	Transcript	frameshift_variant	475-476	475-476	159	R/LFLX	cgg/cTTTTTTTgg	-	IMPACT=HIGH;STRAND=-1
+chr21_39801346_TG/-	chr21:39801346-39801347	-	ENSG00000183067	ENST00000380588	Transcript	frameshift_variant	1540-1541	1213-1214	405	C/X	TGt/t	-	IMPACT=HIGH;STRAND=1
+chr21_43753682_-/A	chr21:43753681-43753682	A	ENSG00000160209	ENST00000468090	Transcript	frameshift_variant	835-836	637-638	213	L/HX	ctc/cAtc	-	IMPACT=HIGH;STRAND=1
+chr21_46161702_-/GGAAGGAA	chr21:46161701-46161702	GGAAGGAA	ENSG00000160284	ENST00000330205	Transcript	frameshift_variant	628-629	238-239	80	S/FPSX	tcc/tTTCCTTCCcc	-	IMPACT=HIGH;STRAND=-1
