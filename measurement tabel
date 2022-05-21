@@ -1,0 +1,17 @@
+measurement_id			zelf genereren
+person_id				van person tabel
+measurement_concept_id	gen id van OMOP Genomic (uit database zoeken met query)
+measurement_date		uit vcf file halen
+measurement_type_concept_id missense/frameshift concept ids
+operator_concept_id
+value_as_number
+value_as_concept_id
+unit_concept_id			37394434 (id voor observable entity protein)
+range_low				AA.pos
+range_high				AA.length
+provider_id				
+visit_occurence_id
+measurement_source_value p.Ile32Phe
+measurement_source_concept_id
+unit_source_value
+value_source_value

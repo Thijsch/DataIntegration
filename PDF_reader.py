@@ -1,19 +1,24 @@
 import tabula as t
 import os
+import uuid
+from datetime import datetime
 
 class PdfReader:
-    def __init__(self, input_files: list[str]):
+    def __init__(self, input_files: list[str], concept_ids):
         self.input_files = input_files        
+        self.concept_ids = concept_ids        
         self.pdf_data = {}
         
-    def read_pdfs(self) -> dict:
+    def read_pdfs(self) -> tuple[list[list], list[list], dict]:
         for input_file in self.input_files:
             output_file = self.convert_to_csv(input_file)
             dict_, participant = self.read_csv(output_file)
             profile, condition_symptoms = self.get_conditions_symptoms(dict_)
             self.pdf_data[participant] = {"condition_symptoms": condition_symptoms, "profile": profile}
             os.remove(output_file)
-        return self.pdf_data
+
+        pdf_list, conditions_list, patient_ids = self.reformat_data(self.pdf_data)
+        return pdf_list, conditions_list, patient_ids
         
         
     def convert_to_csv(self, input_file):
@@ -64,3 +69,35 @@ class PdfReader:
                     file.write(conditions_symptom[i]+",")
                 else:
                     file.write(conditions_symptom[i])
+
+    def reformat_data(self, pdf_data: dict[str, dict[str, str]]):
+        """Format data to 2d lists with uuid's"""
+        profile_list = []
+        conditions_list = []
+        patient_ids = {}
+        for patient, metadata in pdf_data.items():
+            patient_data = metadata["profile"]
+            person_id = uuid.uuid4().int
+            gender_concept_id = self.concept_ids[patient_data[2]]
+            year_of_birth = patient_data[1]
+            month_of_birth = patient_data[0]
+            race_concept_id = self.concept_ids[patient_data[3]]
+            ethnicity_concept_id = self.concept_ids[patient_data[3]]
+            person_source_value = patient
+            gender_source_value = patient_data[2]
+            race_source_value = patient_data[3]
+            ethnicity_source_value = patient_data[3]
+            profile_list.append([person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value])
+            # person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value
+            
+            patient_ids[person_source_value] = person_id
+
+            for condition in metadata["condition_symptoms"]:
+                condition_occurrence_id = uuid.uuid4().int
+                condition_concept_id = self.concept_ids[condition]
+                condition_start_date = datetime.now()  # TODO start_date hebben we niet
+                condition_type_concept_id = 0  # TODO uhhhh wat is dit?
+                conditions_list.append([condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id])
+                # condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id
+
+        return profile_list, conditions_list, patient_ids
