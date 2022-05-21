@@ -3,7 +3,7 @@ import psycopg
 
 
 class Inserter:
-    def _init_(self, auto_commit: bool, person, condition_occurrence, measurement):
+    def __init__(self, auto_commit: bool, person, condition_occurrence, measurement):
         self.conn = psycopg.connect("")
 
         self.conn.autocommit = auto_commit

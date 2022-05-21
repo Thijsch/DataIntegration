@@ -39,6 +39,7 @@ def main():
     measurement_list = vcf_reader.read_vcfs()
     pprint(measurement_list)
     
+    # TODO test
     inserter = Inserter(auto_commit=True, person=patient_list, condition_occurrence=conditions_list, measurement=measurement_list)
     # inserter.insert_data()
     # inserter.close_connection()
