@@ -13,6 +13,11 @@ class VcfReader:
         self.concept_ids = concept_ids
 
     def read_vcfs(self) -> list[list]:
+        """Parse all vcf files.
+
+        Returns:
+            list[list]: Lists ready for import into to the database.
+        """
         for input_file in self.input_files:
             self.read_vcf(file=input_file)
         return self.measurement
