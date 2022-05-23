@@ -18,8 +18,12 @@ class VcfReader:
         Returns:
             list[list]: Lists ready for import into to the database.
         """
+        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
+                               "host='postgres.biocentre.nl' "
+                               "password='blaat1234'")
         for input_file in self.input_files:
             self.read_vcf(file=input_file)
+        self.conn.close()
         return self.measurement
 
     def read_vcf(self, file):
@@ -92,15 +96,11 @@ class VcfReader:
         :param gene: Name of the gene
         :return: The concept id
         """
-        conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
-                               "host='postgres.biocentre.nl' "
-                               "password='blaat1234'")
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute(f"""select concept_id
                     from di_groep_7.concept concept 
                     where concept.concept_name SIMILAR TO '{gene} %'  and
                     concept.concept_class_id = 'Genetic Variation';""")
-        conn.close()
         try:
             rows = cur.fetchall()
             return int(rows[0][0])
