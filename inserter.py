@@ -3,8 +3,11 @@ import psycopg
 
 
 class Inserter:
-    def __init__(self, auto_commit: bool, person, condition_occurrence, measurement):
-        self.conn = psycopg.connect("")
+    def __init__(self, auto_commit: bool, person, condition_occurrence,
+                 measurement):
+        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
+                                    "host='postgres.biocentre.nl' "
+                                    "password='blaat1234'")
 
         self.conn.autocommit = auto_commit
 
@@ -32,9 +35,9 @@ class Inserter:
             postgres_records = self.data_to_insert[table]
             with cursor.copy(query) as copy:
                 for record in postgres_records:
+                    print(record)
                     copy.write_row(record)
-    
+
     def close_connection(self):
         """Close connection to database."""
         self.conn.close()
-        
