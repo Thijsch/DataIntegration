@@ -33,7 +33,7 @@ class VcfReader:
         :param file: string, pad naar het vcf file
         """
         person_id = 0
-        date_time = datetime.datetime.now()
+        date = datetime.datetime.now()
         pattern = r';[^\|]*\|(?P<type>[a-z]+)_[a-z]+\|[^;\|]*\|' \
                   r'(?P<gene>[^;\|]+)\|([^;\|]*\|){6}' \
                   r'(?P<AAchange>p.(?P<ref>[A-z]+)(?P<pos>[0-9]+)' \
@@ -60,14 +60,8 @@ class VcfReader:
                     if match:
                         datetime_object = datetime.datetime.strptime(
                             match.group('month'), "%b")
-                        month_number = datetime_object.month if len(
-                            str(datetime_object.month)) > 1 else \
-                            f"0{datetime_object.month}"
-                        date_time_str = f"{match.group('day')}/" \
-                                        f"{month_number}/" \
-                                        f"{match.group('year')} " \
-                                        f"{match.group('time')}"
-                        date_time = datetime.datetime.strptime(date_time_str,'%d/%m/%y %H:%M:%S')
+                        month_number = datetime_object.month
+                        date = datetime.datetime(int(match.group('year')), month_number, int(match.group('day')))
 
                 elif line.strip():
                     match = re.search(pattern, line)
@@ -78,8 +72,7 @@ class VcfReader:
                         person_id,  # person_id
                         self.get_concept_id(match.group('gene')),
                         # concept_id
-                        date_time.date,  # measurement_date
-                        date_time,  # measurement_datetime
+                        date,  # measurement_date
                         self.concept_ids[match.group('type')],
                         # 'measurement_type_concept_id
                         37394434,  # unit_concept_id
