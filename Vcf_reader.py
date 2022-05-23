@@ -18,8 +18,12 @@ class VcfReader:
         Returns:
             list[list]: Lists ready for import into to the database.
         """
+        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
+                               "host='postgres.biocentre.nl' "
+                               "password='blaat1234'")
         for input_file in self.input_files:
             self.read_vcf(file=input_file)
+        self.conn.close()
         return self.measurement
 
     def read_vcf(self, file):
@@ -29,7 +33,7 @@ class VcfReader:
         :param file: string, pad naar het vcf file
         """
         person_id = 0
-        date_time = datetime.datetime.now()
+        date = datetime.datetime.now()
         pattern = r';[^\|]*\|(?P<type>[a-z]+)_[a-z]+\|[^;\|]*\|' \
                   r'(?P<gene>[^;\|]+)\|([^;\|]*\|){6}' \
                   r'(?P<AAchange>p.(?P<ref>[A-z]+)(?P<pos>[0-9]+)' \
@@ -56,14 +60,8 @@ class VcfReader:
                     if match:
                         datetime_object = datetime.datetime.strptime(
                             match.group('month'), "%b")
-                        month_number = datetime_object.month if len(
-                            str(datetime_object.month)) > 1 else \
-                            f"0{datetime_object.month}"
-                        date_time_str = f"{match.group('day')}/" \
-                                        f"{month_number}/" \
-                                        f"{match.group('year')} " \
-                                        f"{match.group('time')}"
-                        date_time = datetime.datetime.strptime(date_time_str,'%d/%m/%y %H:%M:%S')
+                        month_number = datetime_object.month
+                        date = datetime.datetime(int(match.group('year')), month_number, int(match.group('day')))
 
                 elif line.strip():
                     match = re.search(pattern, line)
@@ -75,8 +73,7 @@ class VcfReader:
                         person_id,  # person_id
                         self.get_concept_id(match.group('gene')),
                         # concept_id
-                        date_time.date,  # measurement_date
-                        date_time,  # measurement_datetime
+                        date,  # measurement_date
                         self.concept_ids[match.group('type')],
                         # 'measurement_type_concept_id
                         37394434,  # unit_concept_id
@@ -93,15 +90,11 @@ class VcfReader:
         :param gene: Name of the gene
         :return: The concept id
         """
-        conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
-                               "host='postgres.biocentre.nl' "
-                               "password='blaat1234'")
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute(f"""select concept_id
                     from di_groep_7.concept concept 
                     where concept.concept_name SIMILAR TO '{gene} %'  and
                     concept.concept_class_id = 'Genetic Variation';""")
-        conn.close()
         try:
             rows = cur.fetchall()
             return int(rows[0][0])
