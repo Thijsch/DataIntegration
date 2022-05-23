@@ -63,7 +63,8 @@ class VcfReader:
                                         f"{month_number}/" \
                                         f"{match.group('year')} " \
                                         f"{match.group('time')}"
-                        date_time = datetime.datetime.strptime(date_time_str,'%d/%m/%y %H:%M:%S')
+                        date_time = datetime.datetime.strptime(date_time_str,
+                                                               '%d/%m/%y %H:%M:%S')
 
                 elif line.strip():
                     match = re.search(pattern, line)

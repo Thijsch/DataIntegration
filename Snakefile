@@ -1,19 +1,16 @@
-import os
+# Thijs Ermens
+# 23-5-2022
+# Met dit snakefile kan snpEFF gerund worden over de vcf files. Deze data
+# wordt vervolgens ingelezen en in de database gezet
 from PDF_reader import PdfReader
 from Vcf_reader import VcfReader
-from pprint import pprint
 from inserter import Inserter
 import glob
+from pathlib import Path
 
-
-vcf = []
-pdf = []
-
+raw = []
 for name in glob.glob('data/10_variants/*.vcf'):
-    vcf.append(name)
-
-for name in glob.glob('data/pdf/*.pdf'):
-    pdf.append(name)
+    raw.append(name)
 
 concept_ids = {
     "missense": 43020565,
@@ -28,29 +25,33 @@ concept_ids = {
     "White": 8527
 }
 
-rule all:
+# rule snpEFF:
+#     """
+#     Bij deze rule wordt de input door de app snpEFF heel gehaald. Output zal in
+#     """
+#     input: raw
+#     output: Path({raw}).stem
+#     shell:
+#         "java -Xmx8g -jar snpEff.jar GRCh37.75 -no-downstream -no-intergenic -no-intron -no-upstream -no-utr -verbose -noStats {input} > {output}.snpEff.vcf"
 
-rule snpEFF:
-    input: vcf
-    output: "data/10_variants"
 
-    shell:
-        "java -Xmx8g -jar snpEff.jar GRCh37.75 -no-downstream -no-intergenic -no-intron -no-upstream -no-utr -verbose -noStats *.chr21.vcf > *.chr21.snpEff.vcf"
+vcf = []
+pdf = []
+print("hoi")
+for name in glob.glob('data/10_variants/*.vcf'):
+    vcf.append(name)
 
-rule pdf_reader:
-    input: pdf
+for name in glob.glob('data/pdf/*.pdf'):
+    pdf.append(name)
+pdf_reader = PdfReader(input_files=pdf,
+    concept_ids=concept_ids)
+patient_list, conditions_list, patient_ids = pdf_reader.read_pdfs()
+vcf_reader = VcfReader(input_files=vcf,
+    concept_ids=concept_ids,patient_ids=patient_ids)
+measurement_list = vcf_reader.read_vcfs()
 
-rule vcf_reader:
-    input: vcf
-
-rule inserter:
-    input:
-        vcf
-
-    ## Installeer snpEff via source
-    # https://pcingola.github.io/SnpEff/download/
-
-    ## Run SNPeff
-    ### Verander filenames in commando
-    ### Het kan zijn dat je na een paar minuten op enter moet drukken om de output te zien
-    # "java -Xmx8g -jar snpEff.jar GRCh37.75 -no-downstream -no-intergenic -no-intron -no-upstream -no-utr -verbose -noStats *.chr21.vcf > *.chr21.snpEff.vcf"
+inserter = Inserter(auto_commit=True,person=patient_list,
+    condition_occurrence=conditions_list,
+    measurement=measurement_list)
+inserter.insert_data()
+inserter.close_connection()

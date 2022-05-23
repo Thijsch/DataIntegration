@@ -16,15 +16,15 @@ def main():
     ]
 
     concept_ids = {
-        "missense": 43020565, 
+        "missense": 43020565,
         "frameshift": 4209465,
-        "Bipolar disorder": 436665, 
-        "Heartblock secondary catheter ablation for PAT": 43021509, 
-        "Uterine fibroids and polyps": 4147607, 
-        "Epilepsy (7-10 y)": 380378, 
-        "Arthritis": 4291025, 
-        "M": 8507, 
-        "F": 8532, 
+        "Bipolar disorder": 436665,
+        "Heartblock secondary catheter ablation for PAT": 43021509,
+        "Uterine fibroids and polyps": 4147607,
+        "Epilepsy (7-10 y)": 380378,
+        "Arthritis": 4291025,
+        "M": 8507,
+        "F": 8532,
         "White": 8527
     }
 
@@ -37,7 +37,6 @@ def main():
                            patient_ids=patient_ids)
     measurement_list = vcf_reader.read_vcfs()
 
-    
     # TODO test
     inserter = Inserter(
         auto_commit=True,
@@ -48,7 +47,7 @@ def main():
 
     inserter.insert_data()
     inserter.close_connection()
-    
-    
+
+
 if __name__ == "__main__":
     main()
