@@ -58,14 +58,12 @@ class VcfReader:
                             match.group('month'), "%b")
                         month_number = datetime_object.month if len(
                             str(datetime_object.month)) > 1 else \
-                            f"0{datetime_object.month} "
+                            f"0{datetime_object.month}"
                         date_time_str = f"{match.group('day')}/" \
                                         f"{month_number}/" \
                                         f"{match.group('year')} " \
-                                        f"{match.group('time')} "
-                        date_time = datetime.datetime.strptime(date_time_str,
-                                                               '%d/%m/%y '
-                                                               '%H:%M:%S')
+                                        f"{match.group('time')}"
+                        date_time = datetime.datetime.strptime(date_time_str,'%d/%m/%y %H:%M:%S')
 
                 elif line.strip():
                     match = re.search(pattern, line)
@@ -102,6 +100,7 @@ class VcfReader:
                     from di_groep_7.concept concept 
                     where concept.concept_name SIMILAR TO '{gene} %'  and
                     concept.concept_class_id = 'Genetic Variation';""")
+        conn.close()
         try:
             rows = cur.fetchall()
             return int(rows[0][0])
