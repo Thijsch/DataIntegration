@@ -93,7 +93,7 @@ class PdfReader:
         patient_ids = {}
         for patient, metadata in pdf_data.items():
             patient_data = metadata["profile"]
-            person_id = uuid.uuid4().int
+            person_id = int(str(uuid.uuid4().int)[-9:-1])
             gender_concept_id = self.concept_ids[patient_data[2]]
             year_of_birth = patient_data[1]
             month_of_birth = patient_data[0]
@@ -116,7 +116,7 @@ class PdfReader:
             patient_ids[person_source_value] = person_id
 
             for condition in metadata["condition_symptoms"]:
-                condition_occurrence_id = uuid.uuid4().int
+                condition_occurrence_id = int(str(uuid.uuid4().int)[-9:-1])
                 condition_concept_id = self.concept_ids[condition]
                 condition_start_date = datetime(1970, 1, 1)
                 condition_type_concept_id = 0  # TODO uhhhh wat is dit?

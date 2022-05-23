@@ -70,7 +70,8 @@ class VcfReader:
                     assert match, f"Line does not match the requested " \
                                   f"format:\n'{line}' "
                     self.measurement.append([
-                        uuid.uuid4().int,  # measurement_id
+                        int(str(uuid.uuid4().int)[-9:-1]),
+                        # measurement_id
                         person_id,  # person_id
                         self.get_concept_id(match.group('gene')),
                         # concept_id

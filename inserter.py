@@ -18,9 +18,9 @@ class Inserter:
         }
 
         self.tables: dict[str, str] = {
-            "person": "COPY person (person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value) FROM STDIN",
-            "condition_occurrence": "COPY condition_occurrence (condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id) FROM STDIN",
-            "measurement": "COPY measurement (measurement_id, person_id, measurement_concept_id, measurement_date, measurement_datetime, measurement_type_concept_id, unit_concept_id, range_low, range_high, measurement_source_value) FROM STDIN",
+            "person": "COPY di_groep_7.person (person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value) FROM STDIN",
+            "condition_occurrence": "COPY di_groep_7.condition_occurrence (condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id) FROM STDIN",
+            "measurement": "COPY di_groep_7.measurement (measurement_id, person_id, measurement_concept_id, measurement_date, measurement_datetime, measurement_type_concept_id, unit_concept_id, range_low, range_high, measurement_source_value) FROM STDIN",
         }
 
     def insert_data(self) -> None:
