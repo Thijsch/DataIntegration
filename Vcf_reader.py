@@ -6,11 +6,10 @@ import psycopg
 
 
 class VcfReader:
-    def __init__(self, input_files: list[str], concept_ids, patient_ids):
+    def __init__(self, input_files: list[str], patient_ids):
         self.input_files = input_files
         self.patient_ids = patient_ids
         self.measurement = []
-        self.concept_ids = concept_ids
 
     def read_vcfs(self) -> list[list]:
         """Parse all vcf files.
@@ -71,10 +70,10 @@ class VcfReader:
                         int(str(uuid.uuid4().int)[-9:-1]),
                         # measurement_id
                         person_id,  # person_id
-                        self.get_concept_id(match.group('gene')),
+                        self.get_gene_concept_id(match.group('gene')),
                         # concept_id
                         date,  # measurement_date
-                        self.concept_ids[match.group('type')],
+                        self.get_concept_id([match.group('type')]),
                         # 'measurement_type_concept_id
                         37394434,  # unit_concept_id
                         match.group('AApos'),  # range_low
@@ -83,7 +82,7 @@ class VcfReader:
                         # measurement_source_value
                     ])
 
-    def get_concept_id(self, gene):
+    def get_gene_concept_id(self, gene):
         """
         Get the concept id out of the database by looking for the name
         of the gene in the table concept_name
@@ -91,10 +90,30 @@ class VcfReader:
         :return: The concept id
         """
         cur = self.conn.cursor()
-        cur.execute(f"""select concept_id
-                    from di_groep_7.concept concept 
-                    where concept.concept_name SIMILAR TO '{gene} %'  and
-                    concept.concept_class_id = 'Genetic Variation';""")
+        cur.execute(f"""
+            SELECT concept_id
+            FROM di_groep_7.concept concept 
+            WHERE concept.concept_name SIMILAR TO '{gene} %'  AND
+            concept.concept_class_id = 'Genetic Variation';
+        """)
+        try:
+            rows = cur.fetchall()
+            return int(rows[0][0])
+        except IndexError:
+            return 0
+
+    def get_concept_id(self, value):
+        """
+        Get the concept id out of the database by looking for the source value in the table mapping
+        :param value: Source value
+        :return: The concept id
+        """
+        cur = self.conn.cursor()
+        cur.execute(f"""
+            SELECT concept_id 
+            FROM mapping 
+            WHERE source_value = '{value}';
+        """)
         try:
             rows = cur.fetchall()
             return int(rows[0][0])

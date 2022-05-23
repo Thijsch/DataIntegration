@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 
 import tabula as t
+import psycopg
 
 
 class PdfReader:
@@ -24,6 +25,9 @@ class PdfReader:
                 dict: Person ids with source patient ids.
             ]
         """
+        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
+                               "host='postgres.biocentre.nl' "
+                               "password='blaat1234'")
         for input_file in self.input_files:
             output_file = self.convert_to_csv(input_file)
             dict_, participant = self.read_csv(output_file)
@@ -34,6 +38,7 @@ class PdfReader:
 
         pdf_list, conditions_list, patient_ids = self.reformat_data(
             self.pdf_data)
+        self.conn.close()
         return pdf_list, conditions_list, patient_ids
 
     def convert_to_csv(self, input_file):
@@ -94,11 +99,11 @@ class PdfReader:
         for patient, metadata in pdf_data.items():
             patient_data = metadata["profile"]
             person_id = int(str(uuid.uuid4().int)[-9:-1])
-            gender_concept_id = self.concept_ids[patient_data[2]]
+            gender_concept_id = self.get_concept_id([patient_data[2]])
             year_of_birth = patient_data[1]
             month_of_birth = patient_data[0]
-            race_concept_id = self.concept_ids[patient_data[3]]
-            ethnicity_concept_id = self.concept_ids[patient_data[3]]
+            race_concept_id = self.get_concept_id([patient_data[3]])
+            ethnicity_concept_id = self.get_concept_id([patient_data[3]])
             person_source_value = patient
             gender_source_value = patient_data[2]
             race_source_value = patient_data[3]
@@ -117,7 +122,7 @@ class PdfReader:
 
             for condition in metadata["condition_symptoms"]:
                 condition_occurrence_id = int(str(uuid.uuid4().int)[-9:-1])
-                condition_concept_id = self.concept_ids[condition]
+                condition_concept_id = self.get_concept_id([condition])
                 condition_start_date = datetime(1970, 1, 1)
                 condition_type_concept_id = 0  # TODO uhhhh wat is dit?
                 conditions_list.append(
@@ -128,3 +133,21 @@ class PdfReader:
                 # condition_type_concept_id
 
         return profile_list, conditions_list, patient_ids
+
+    def get_concept_id(self, value):
+        """
+        Get the concept id out of the database by looking for the source value in the table mapping
+        :param value: Source value
+        :return: The concept id
+        """
+        cur = self.conn.cursor()
+        cur.execute(f"""
+            SELECT concept_id 
+            FROM mapping 
+            WHERE source_value = '{value}';
+        """)
+        try:
+            rows = cur.fetchall()
+            return int(rows[0][0])
+        except IndexError:
+            return 0
