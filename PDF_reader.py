@@ -10,6 +10,18 @@ class PdfReader:
         self.pdf_data = {}
         
     def read_pdfs(self) -> tuple[list[list], list[list], dict]:
+        """Parse all vcf files.
+
+        Returns:
+            list[list]: Lists ready for import into to the database.
+
+        Returns:
+            tuple[
+                list[list]: List with person data ready for import into to the database.
+                list[list]: List with condition symptoms data ready for import into to the database.
+                dict: Person ids with source patient ids.
+            ]
+        """
         for input_file in self.input_files:
             output_file = self.convert_to_csv(input_file)
             dict_, participant = self.read_csv(output_file)
@@ -17,8 +29,8 @@ class PdfReader:
             self.pdf_data[participant] = {"condition_symptoms": condition_symptoms, "profile": profile}
             os.remove(output_file)
 
-        pdf_list, conditions_list, patient_ids = self.reformat_data(self.pdf_data)
-        return pdf_list, conditions_list, patient_ids
+        person_list, conditions_list, patient_ids = self.reformat_data(self.pdf_data)
+        return person_list, conditions_list, patient_ids
         
         
     def convert_to_csv(self, input_file):
@@ -95,7 +107,7 @@ class PdfReader:
             for condition in metadata["condition_symptoms"]:
                 condition_occurrence_id = uuid.uuid4().int
                 condition_concept_id = self.concept_ids[condition]
-                condition_start_date = datetime.now()  # TODO start_date hebben we niet
+                condition_start_date = datetime(1970, 1, 1)
                 condition_type_concept_id = 0  # TODO uhhhh wat is dit?
                 conditions_list.append([condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id])
                 # condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id
