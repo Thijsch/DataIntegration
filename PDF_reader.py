@@ -1,28 +1,32 @@
-import tabula as t
 import os
 import uuid
 from datetime import datetime
 
+import tabula as t
+
+
 class PdfReader:
     def __init__(self, input_files: list[str], concept_ids):
-        self.input_files = input_files        
-        self.concept_ids = concept_ids        
+        self.input_files = input_files
+        self.concept_ids = concept_ids
         self.pdf_data = {}
-        
+
     def read_pdfs(self) -> tuple[list[list], list[list], dict]:
         for input_file in self.input_files:
             output_file = self.convert_to_csv(input_file)
             dict_, participant = self.read_csv(output_file)
             profile, condition_symptoms = self.get_conditions_symptoms(dict_)
-            self.pdf_data[participant] = {"condition_symptoms": condition_symptoms, "profile": profile}
+            self.pdf_data[participant] = {
+                "condition_symptoms": condition_symptoms, "profile": profile}
             os.remove(output_file)
 
-        pdf_list, conditions_list, patient_ids = self.reformat_data(self.pdf_data)
+        pdf_list, conditions_list, patient_ids = self.reformat_data(
+            self.pdf_data)
         return pdf_list, conditions_list, patient_ids
-        
-        
+
     def convert_to_csv(self, input_file):
-        out = input_file.split(".")[0] + "_out" + "." + input_file.split(".")[1]
+        out = input_file.split(".")[0] + "_out" + "." + input_file.split(".")[
+            1]
         t.convert_into(input_file, out, pages="all")
         return out
 
@@ -53,20 +57,20 @@ class PdfReader:
 
     def make_csv(self, profile, conditions_symptom, name, participant):
         file_name = name.split(".")[0] + "_Conditions_or_Symptom" + ".csv"
-        with open(file_name,"w") as file:
-            file.write(participant+",")
+        with open(file_name, "w") as file:
+            file.write(participant + ",")
 
             for i in range(len(profile)):
-                if i+1 < len(profile):
-                    file.write(profile[i]+",")
+                if i + 1 < len(profile):
+                    file.write(profile[i] + ",")
                 else:
                     file.write(profile[i])
 
-            file.write(participant+",")
+            file.write(participant + ",")
 
             for i in range(len(conditions_symptom)):
-                if i+1 < len(conditions_symptom):
-                    file.write(conditions_symptom[i]+",")
+                if i + 1 < len(conditions_symptom):
+                    file.write(conditions_symptom[i] + ",")
                 else:
                     file.write(conditions_symptom[i])
 
@@ -87,17 +91,29 @@ class PdfReader:
             gender_source_value = patient_data[2]
             race_source_value = patient_data[3]
             ethnicity_source_value = patient_data[3]
-            profile_list.append([person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value])
-            # person_id, gender_concept_id, year_of_birth, month_of_birth, race_concept_id, ethnicity_concept_id, person_source_value, gender_source_value, race_source_value, ethnicity_source_value
-            
+            profile_list.append(
+                [person_id, gender_concept_id, year_of_birth, month_of_birth,
+                 race_concept_id, ethnicity_concept_id, person_source_value,
+                 gender_source_value, race_source_value,
+                 ethnicity_source_value])
+            # person_id, gender_concept_id, year_of_birth,
+            # month_of_birth, race_concept_id, ethnicity_concept_id,
+            # person_source_value, gender_source_value,
+            # race_source_value, ethnicity_source_value
+
             patient_ids[person_source_value] = person_id
 
             for condition in metadata["condition_symptoms"]:
                 condition_occurrence_id = uuid.uuid4().int
                 condition_concept_id = self.concept_ids[condition]
-                condition_start_date = datetime.now()  # TODO start_date hebben we niet
+                condition_start_date = datetime.now()
+                # TODO start_date hebben we niet
                 condition_type_concept_id = 0  # TODO uhhhh wat is dit?
-                conditions_list.append([condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id])
-                # condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_type_concept_id
+                conditions_list.append(
+                    [condition_occurrence_id, person_id, condition_concept_id,
+                     condition_start_date, condition_type_concept_id])
+                # condition_occurrence_id, person_id,
+                # condition_concept_id, condition_start_date,
+                # condition_type_concept_id
 
         return profile_list, conditions_list, patient_ids
