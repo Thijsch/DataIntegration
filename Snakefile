@@ -2,15 +2,24 @@
 # 23-5-2022
 # Met dit snakefile kan snpEFF gerund worden over de vcf files. Deze data
 # wordt vervolgens ingelezen en in de database gezet
+from pathlib import Path
+import os
+import glob
+import dotenv
+
 from PDF_reader import PdfReader
 from Vcf_reader import VcfReader
 from inserter import Inserter
-import glob
-from pathlib import Path
+
+dotenv.load_dotenv(".env")
 
 # TODO paths as command line arguments or in .env
 raw = []
-for name in glob.glob('data/10_variants/*.vcf'):
+vcf_dir = str(os.getenv("VCF_FILES"))
+if vcf_dir.endswith("/"):
+    vcf_dir = vcf_dir[:-1]
+
+for name in glob.glob(f'{vcf_dir}/*.vcf'):
     raw.append(name)
     print(Path(name).stem)
     print(name)
@@ -29,11 +38,13 @@ for name in glob.glob('data/10_variants/*.vcf'):
 
 vcf_input_files = []
 pdf_input_files = []
-print("hoi")
-for name in glob.glob('data/10_variants/*.vcf'):
+for name in glob.glob(f'{vcf_dir}/*.vcf'):
     vcf_input_files.append(name)
 
-for name in glob.glob('data/pdf/*.pdf'):
+pdf_dir = str(os.getenv("PDF_FILES"))
+if pdf_dir.endswith("/"):
+    pdf_dir = pdf_dir[:-1]
+for name in glob.glob(f'{pdf_dir}/*.pdf'):
     pdf_input_files.append(name)
 
 if len(pdf_input_files) != len(vcf_input_files):

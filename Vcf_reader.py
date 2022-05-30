@@ -2,7 +2,10 @@ import datetime
 import re
 import uuid
 
+import dotenv
 import psycopg
+
+dotenv.load_dotenv(".env")
 
 
 class VcfReader:
