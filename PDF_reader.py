@@ -139,10 +139,13 @@ class PdfReader:
         :param value: Source value
         :return: The concept id
         """
+        if type(value) == list:
+            value = value[0]
+
         cur = self.conn.cursor()
         cur.execute(f"""
             SELECT concept_id 
-            FROM mapping 
+            FROM di_groep_7.mapping 
             WHERE source_value = '{value}';
         """)
         try:
