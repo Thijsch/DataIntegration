@@ -1,6 +1,5 @@
 # DataIntegration
 Dit project is gedaan door Thijs, Janneke en David.
-
 De code is geschreven in Python 3.10. Om het te kunnen runnen is het belangrijk dat deze versie ook gebruikt wordt, omdat er een nieuwe syntax gebruikt is. 
 ## Orginele dataset.
 
