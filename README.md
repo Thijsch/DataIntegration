@@ -1,6 +1,6 @@
 # DataIntegration
 Dit project is gedaan door Thijs, Janneke en David.
-De code is geschreven in Python 3.10. Om het te kunnen runnen is het belangrijk dat deze versie ook gebruikt wordt, omdat er een nieuwe syntax gerbuikt is. 
+De code is geschreven in Python 3.10. Om het te kunnen runnen is het belangrijk dat deze versie ook gebruikt wordt, omdat er een nieuwe syntax gebruikt is. 
 ## Orginele dataset.
 
 Voor dit project is er gebruik gemaakt van drie verschillende data van personen. Deze data komt van PersonalGenome (Szego & Scherer, z.d.). De personen die voor dit project gebruikt zijn: PGP13, PGP18 en PGP48. Per persoon is er een PDF bestand waar zij zelf informatie overzich zelf hebben gegeven. Zoals hun lengte, ziektes en medische procedures. Verder is er ook een VCF bestand waar de mutatie per persoon zijn aangegeven.
