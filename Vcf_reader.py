@@ -14,7 +14,7 @@ class VcfReader:
         self.measurement = []
 
     def read_vcfs(self) -> list[list]:
-        """Parse all vcf files.
+        """ Parse all vcf files.
 
         Returns:
             list[list]: Lists ready for import into to the database.
@@ -31,8 +31,8 @@ class VcfReader:
             self.conn.close()
         return self.measurement
 
-    def read_vcf(self, file):
-        """Parse values for condition_occurence table in database
+    def read_vcf(self, file: str):
+        """ Parse values for condition_occurence table in database
         from vcf files.
         
         Args:
@@ -82,7 +82,7 @@ class VcfReader:
                     ])
 
     def search_person_id(self, line: str) -> str | None:
-        """Search line for person id.
+        """ Search line for person id.
 
         Args:
             line (str): Line to search for the person_id.
@@ -112,8 +112,17 @@ class VcfReader:
         else:
             return None
 
-    def search_date(self, line):
-        match = match = re.search(
+    def search_date(self, line: str) -> datetime:
+        """It will search if the day month year are in the line
+
+        Args:
+            line: String with one line of the file
+
+        Returns:
+            datatime | None: datatime format
+
+        """
+        match = re.search(
             r'^##startTime=[A-z]+'
             r'\s(?P<month>[A-z]{3})'
             r'\s(?P<day>[0-9]{,2})'
@@ -130,12 +139,15 @@ class VcfReader:
         else:
             return None
 
-    def get_gene_concept_id(self, gene):
-        """
-        Get the concept id out of the database by looking for the name
+    def get_gene_concept_id(self, gene: str) -> int:
+        """ Get the concept id out of the database by looking for the name
         of the gene in the table concept_name
-        :param gene: Name of the gene
-        :return: The concept id
+
+        Args:
+            gene (str): Name of the gene
+
+        Returns:
+            int | None: The concept id
         """
         cur = self.conn.cursor()
         cur.execute(f"""
@@ -150,12 +162,15 @@ class VcfReader:
         except IndexError:
             return 0
 
-    def get_concept_id(self, value):
-        """
-        Get the concept id out of the database by looking for the
+    def get_concept_id(self, value: str) -> int:
+        """ Get the concept id out of the database by looking for the
         source value in the table mapping.
-        :param value: Source value
-        :return: The concept id
+
+        Args:
+            value (str): Source value
+
+        Returns:
+            int | None:
         """
         cur = self.conn.cursor()
         cur.execute(f"""

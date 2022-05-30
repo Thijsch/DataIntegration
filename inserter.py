@@ -52,13 +52,7 @@ class Inserter:
         }
 
     def insert_data(self) -> None:
-        """Insert a copy into the database.
-
-        Args:
-            postgres_records (list[list]):
-            List with data for every record.
-            table (str): What table to insert the data into.
-        """
+        """ Insert a copy into the database."""
         cursor = self.conn.cursor()
         for table, query in self.tables.items():
             postgres_records = self.data_to_insert[table]
@@ -84,7 +78,6 @@ class Inserter:
                               f'rows before inserting. '
                               f'New data was successfully inserted.')
 
-
     def close_connection(self):
-        """Close connection to database."""
+        """ Close connection to database."""
         self.conn.close()

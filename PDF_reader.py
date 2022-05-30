@@ -14,7 +14,7 @@ class PdfReader:
         self.pdf_data = {}
 
     def read_pdfs(self) -> tuple[list[list], list[list], dict]:
-        """Parse all vcf files.
+        """ Parse all vcf files.
 
         Returns:
             list[list]: Lists ready for import into to the database.
@@ -54,8 +54,8 @@ class PdfReader:
             self.conn.close()
         return pdf_list, conditions_list, patient_ids
 
-    def convert_to_csv(self, input_file) -> str:
-        """Convert data in pdf to .csv file.
+    def convert_to_csv(self, input_file: str) -> str:
+        """ Convert data in pdf to .csv file.
 
         Args:
             input_file (str): input pdf file path.
@@ -67,8 +67,8 @@ class PdfReader:
         t.convert_into(input_file, out, pages="all")
         return out
 
-    def read_csv(self, input) -> tuple[dict, str]:
-        """Retrieve metadata for database table 'person' from csv file.
+    def read_csv(self, input: str) -> tuple[dict, str]:
+        """ Retrieve metadata for database table 'person' from csv file.
 
         Args:
             input (str): input file.
@@ -92,7 +92,7 @@ class PdfReader:
         return pdf_data, participant
 
     def get_conditions_symptoms(self, pdf_data: dict) -> tuple[list, list]:
-        """Get profile and conditions_symptom from from metadata.
+        """ Get profile and conditions_symptom from  metadata.
 
         Args:
             pdf_data (dict): Data from pdf in csv format.
@@ -114,35 +114,19 @@ class PdfReader:
                     profile = (value.strip().split(",")[1::])
         return profile, conditions_symptom
 
-    def make_csv(self, profile, conditions_symptom, name, participant):
-        """_summary_
+    def reformat_data(self, pdf_data: dict[str, dict[str, str]]) -> \
+            tuple[list, list, dict]:
+        """ Format data to 2d lists with uuid's
 
         Args:
-            profile (_type_): _description_
-            conditions_symptom (_type_): _description_
-            name (_type_): _description_
-            participant (_type_): _description_
+            pdf_data (dict): Data from pdf in csv format.
+
+        Returns:
+            tuple[
+                list: profile_list.
+                list: conditions_list.
+                list: patient_ids.
         """
-        file_name = name.split(".")[0] + "_Conditions_or_Symptom" + ".csv"
-        with open(file_name, "w") as file:
-            file.write(participant + ",")
-
-            for i in range(len(profile)):
-                if i + 1 < len(profile):
-                    file.write(profile[i] + ",")
-                else:
-                    file.write(profile[i])
-
-            file.write(participant + ",")
-
-            for i in range(len(conditions_symptom)):
-                if i + 1 < len(conditions_symptom):
-                    file.write(conditions_symptom[i] + ",")
-                else:
-                    file.write(conditions_symptom[i])
-
-    def reformat_data(self, pdf_data: dict[str, dict[str, str]]):
-        """Format data to 2d lists with uuid's"""
         profile_list = []
         conditions_list = []
         patient_ids = {}
@@ -170,19 +154,22 @@ class PdfReader:
                 condition_occurrence_id = int(str(uuid.uuid4().int)[-9:-1])
                 condition_concept_id = self.get_concept_id([condition])
                 condition_start_date = datetime(1970, 1, 1)
-                condition_type_concept_id = self.get_concept_id("Patient Self-Reported Condition")
+                condition_type_concept_id = self.get_concept_id(
+                    "Patient Self-Reported Condition")
                 conditions_list.append(
                     [condition_occurrence_id, person_id, condition_concept_id,
                      condition_start_date, condition_type_concept_id])
 
         return profile_list, conditions_list, patient_ids
 
-    def get_concept_id(self, value):
-        """
-        Get the concept id out of the database by looking for the source
+    def get_concept_id(self, value) -> int:
+        """ Get the concept id out of the database by looking for the source
         value in the table mapping
-        :param value: Source value
-        :return: The concept id
+        Args:
+            value: Source value
+
+        Returns:
+            int: The concept id
         """
         if type(value) == list:
             value = value[0]
