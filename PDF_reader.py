@@ -9,6 +9,8 @@ import psycopg
 class PdfReader:
     def __init__(self, input_files: list[str]):
         self.input_files = input_files
+        if not input_files:
+            raise Exception("No metadata files (pdf) found")
         self.pdf_data = {}
 
     def read_pdfs(self) -> tuple[list[list], list[list], dict]:
@@ -24,6 +26,7 @@ class PdfReader:
                 dict: Person ids with source patient ids.
             ]
         """
+        # TODO as command line arguments
         self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
                                "host='postgres.biocentre.nl' "
                                "password='blaat1234'")

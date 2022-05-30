@@ -8,6 +8,8 @@ import psycopg
 class VcfReader:
     def __init__(self, input_files: list[str], patient_ids):
         self.input_files = input_files
+        if not input_files:
+            raise Exception("No metadata files (pdf) found")
         self.patient_ids = patient_ids
         self.measurement = []
 
@@ -73,7 +75,7 @@ class VcfReader:
                         self.get_gene_concept_id(match.group('gene')),
                         # concept_id
                         date,  # measurement_date
-                        self.get_concept_id([match.group('type')]),
+                        self.get_concept_id(match.group('type')),
                         # 'measurement_type_concept_id
                         37394434,  # unit_concept_id
                         match.group('AApos'),  # range_low
@@ -111,7 +113,7 @@ class VcfReader:
         cur = self.conn.cursor()
         cur.execute(f"""
             SELECT concept_id 
-            FROM mapping 
+            FROM di_groep_7.mapping 
             WHERE source_value = '{value}';
         """)
         try:

@@ -8,7 +8,7 @@ from inserter import Inserter
 import glob
 from pathlib import Path
 
-# TODO paths as command line arguments
+# TODO paths as command line arguments or in .env
 raw = []
 for name in glob.glob('data/10_variants/*.vcf'):
     raw.append(name)

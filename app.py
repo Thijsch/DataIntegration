@@ -1,19 +1,25 @@
 from PDF_reader import PdfReader
 from Vcf_reader import VcfReader
 from inserter import Inserter
+import glob
+
 
 
 def main():
     pdf_input_files = [
-        "data/pdf/PGPC-13.pdf",
-        "data/pdf/PGPC-18.pdf",
-        "data/pdf/PGPC-48.pdf",
+        name for name in glob.glob('data/pdf/*.pdf')
     ]
     vcf_input_files = [
-        "data/10_variants/PGPC_0013_S1_chr21_out_filtered_10.flt.vcf",
-        "data/10_variants/PGPC_0018_S1_chr21_out_filtered_10.flt.vcf",
-        "data/10_variants/PGPC_0048_S1_chr21_out_filtered_10.flt.vcf"
+        name for name in glob.glob('data/10_variants/*.vcf')
     ]
+
+    # TODO aan snakemake toevoegen
+    if len(pdf_input_files) != len(vcf_input_files):
+        print(pdf_input_files)
+        print(len(pdf_input_files))
+        print(vcf_input_files)
+        print(len(vcf_input_files))
+        raise Exception("Amount of meta data files (pdf) does not match the amount of vcf files.")
 
     pdf_reader = PdfReader(input_files=pdf_input_files)
     patient_list, conditions_list, patient_ids = pdf_reader.read_pdfs()
@@ -22,7 +28,6 @@ def main():
                            patient_ids=patient_ids)
     measurement_list = vcf_reader.read_vcfs()
 
-    # TODO test
     inserter = Inserter(
         auto_commit=True,
         person=patient_list,
@@ -31,6 +36,7 @@ def main():
     )
 
     inserter.insert_data()
+    inserter.validate()
     inserter.close_connection()
 
 

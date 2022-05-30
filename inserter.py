@@ -65,6 +65,16 @@ class Inserter:
                     print(record)
                     copy.write_row(record)
 
+    def validate(self):
+        cursor = self.conn.cursor()
+        for table, data in self.data_to_insert.items():
+            cursor.execute(f"""
+                select count(*) from di_groep_7.{table};
+            """)
+            rows_in_table = int(cursor.fetchall()[0][0])
+            if not len(data) == rows_in_table:
+                raise Exception(f'Table {table} was not fully inserted as only {rows_in_table} of {len(data)} rows were inserted.')
+
     def close_connection(self):
         """Close connection to database."""
         self.conn.close()
