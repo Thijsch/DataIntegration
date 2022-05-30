@@ -2,6 +2,7 @@ from PDF_reader import PdfReader
 from Vcf_reader import VcfReader
 from inserter import Inserter
 import glob
+import os
 
 
 
@@ -9,8 +10,13 @@ def main():
     pdf_input_files = [
         name for name in glob.glob('data/pdf/*.pdf')
     ]
+
+    vcf_dir = str(os.getenv("VCF_FILES"))
+    if vcf_dir.endswith("/"):
+        vcf_dir = vcf_dir[:-1]
+
     vcf_input_files = [
-        name for name in glob.glob('data/10_variants/*.vcf')
+        name for name in glob.glob(f'{vcf_dir}/*.vcf')
     ]
 
     if len(pdf_input_files) != len(vcf_input_files):

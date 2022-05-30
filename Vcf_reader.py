@@ -115,7 +115,7 @@ class VcfReader:
         else:
             return None
 
-    def search_date(self, line: str) -> datetime:
+    def search_date(self, line: str) -> datetime.datetime | None:
         """It will search if the day month year are in the line
 
         Args:
