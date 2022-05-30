@@ -3,7 +3,10 @@ import uuid
 from datetime import datetime
 
 import tabula as t
+import dotenv
 import psycopg
+
+dotenv.load_dotenv(".env")
 
 
 class PdfReader:
@@ -29,10 +32,7 @@ class PdfReader:
             ]
         """
         # TODO as command line arguments
-        self.conn = psycopg.connect("dbname='onderwijs' "
-                                    "user='DI_groep_7' "
-                                    "host='postgres.biocentre.nl' "
-                                    "password='blaat1234'")
+        self.conn = psycopg.connect("")
 
         try:
             for input_file in self.input_files:
