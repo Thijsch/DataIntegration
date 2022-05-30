@@ -22,7 +22,6 @@ def main():
                            patient_ids=patient_ids)
     measurement_list = vcf_reader.read_vcfs()
 
-    
     # TODO test
     inserter = Inserter(
         auto_commit=True,
@@ -33,7 +32,7 @@ def main():
 
     inserter.insert_data()
     inserter.close_connection()
-    
-    
+
+
 if __name__ == "__main__":
     main()
