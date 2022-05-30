@@ -24,7 +24,7 @@ rule snpEFF:
     input: "/home/daaf/Downloads/PGPC_0018_S1_chr21.flt.vcf"
     output: "out"
     shell:
-        "java -Xmx8g -jar /home/daaf/snpEff/snpEff.jar GRCh37.75 "
+        f"java -Xmx8g -jar {os.getenv("SNPEFF_FILE")} GRCh37.75 "
         "-no-downstream -no-intergenic -no-intron -no-upstream -no-utr -verbose -noStats {input} > {output}.snpEff.vcf"
 
 
