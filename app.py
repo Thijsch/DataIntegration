@@ -7,11 +7,14 @@ import os
 
 
 def main():
+    pdf_dir = str(os.getenv("PDF_DIR"))
+    if pdf_dir.endswith("/"):
+        pdf_dir = pdf_dir[:-1]
     pdf_input_files = [
-        name for name in glob.glob('data/pdf/*.pdf')
+        name for name in glob.glob(f'{pdf_dir}/*.pdf')
     ]
 
-    vcf_dir = str(os.getenv("VCF_FILES"))
+    vcf_dir = str(os.getenv("VCF_DIR"))
     if vcf_dir.endswith("/"):
         vcf_dir = vcf_dir[:-1]
 
