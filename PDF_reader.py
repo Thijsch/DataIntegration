@@ -30,20 +30,34 @@ class PdfReader:
         self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
                                "host='postgres.biocentre.nl' "
                                "password='blaat1234'")
-        for input_file in self.input_files:
-            output_file = self.convert_to_csv(input_file)
-            dict_, participant = self.read_csv(output_file)
-            profile, condition_symptoms = self.get_conditions_symptoms(dict_)
-            self.pdf_data[participant] = {
-                "condition_symptoms": condition_symptoms, "profile": profile}
-            os.remove(output_file)
 
-        pdf_list, conditions_list, patient_ids = self.reformat_data(
-            self.pdf_data)
+        try:
+            for input_file in self.input_files:
+                output_file = self.convert_to_csv(input_file)
+                dict_, participant = self.read_csv(output_file)
+                profile, condition_symptoms = self.get_conditions_symptoms(dict_)
+                self.pdf_data[participant] = {
+                    "condition_symptoms": condition_symptoms, "profile": profile}
+                os.remove(output_file)
+
+            pdf_list, conditions_list, patient_ids = self.reformat_data(
+                self.pdf_data)
+        except:
+            raise
+        finally:
+            self.conn.close()
         self.conn.close()
         return pdf_list, conditions_list, patient_ids
 
     def convert_to_csv(self, input_file):
+        """_summary_
+
+        Args:
+            input_file (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         out = input_file.split(".")[0] + "_out" + "." + input_file.split(".")[
             1]
         t.convert_into(input_file, out, pages="all")
