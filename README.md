@@ -1,5 +1,5 @@
 # DataIntegration
-
+Dit project is gedaan door Thijs, Janneke en David.
 ## Orginele dataset.
 
 Voor dit project is er gebruik gemaakt van drie verschillende data van personen. Deze data komt van PersonalGenome (BRON?). De personen die voor dit project gebruikt zijn: PGP13, PGP18 en PGP48. Per persoon is er een PDF bestand waar zij zelf informatie overzich zelf hebben gegeven. Zoals hun lengte, ziektes en medische procedures. Verder is er ook een VCF bestand waar de mutatie per persoon zijn aangegeven.
