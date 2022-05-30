@@ -13,7 +13,6 @@ def main():
         name for name in glob.glob('data/10_variants/*.vcf')
     ]
 
-    # TODO aan snakemake toevoegen
     if len(pdf_input_files) != len(vcf_input_files):
         raise Exception("Amount of meta data files (pdf) "
                         "does not match the amount of vcf files.")
