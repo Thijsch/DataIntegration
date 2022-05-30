@@ -5,7 +5,8 @@ import psycopg
 class Inserter:
     def __init__(self, auto_commit: bool, person, condition_occurrence,
                  measurement):
-        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
+        self.conn = psycopg.connect("dbname='onderwijs' "
+                                    "user='DI_groep_7' "
                                     "host='postgres.biocentre.nl' "
                                     "password='blaat1234'")
 
@@ -54,7 +55,8 @@ class Inserter:
         """Insert a copy into the database.
 
         Args:
-            postgres_records (list[list]): List with data for every record.
+            postgres_records (list[list]):
+            List with data for every record.
             table (str): What table to insert the data into.
         """
         cursor = self.conn.cursor()
@@ -72,9 +74,15 @@ class Inserter:
             """)
             rows_in_table = int(cursor.fetchall()[0][0])
             if len(data) > rows_in_table:
-                raise Exception(f'Table {table} was not fully inserted as only {rows_in_table} of {len(data)} rows were inserted.')
+                raise Exception(f'Table {table} '
+                                f'was not fully inserted as only '
+                                f'{rows_in_table} of {len(data)} '
+                                f'rows were inserted.')
             if len(data) < rows_in_table:
-                raise Warning(f'Table {table} already contained {rows_in_table} rows before inserting. New data was successfully inserted.')
+                raise Warning(f'Table {table} '
+                              f'already contained {rows_in_table} '
+                              f'rows before inserting. '
+                              f'New data was successfully inserted.')
 
 
     def close_connection(self):
