@@ -21,32 +21,37 @@ class PdfReader:
 
         Returns:
             tuple[
-                list[list]: List with person data ready for import into to the database.
-                list[list]: List with condition symptoms data ready for import into to the database.
+                list[list]: List with person data ready for import into
+                to the database.
+                list[list]: List with condition symptoms data ready for
+                import into to the database.
                 dict: Person ids with source patient ids.
             ]
         """
         # TODO as command line arguments
-        self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
-                               "host='postgres.biocentre.nl' "
-                               "password='blaat1234'")
+        self.conn = psycopg.connect("dbname='onderwijs' "
+                                    "user='DI_groep_7' "
+                                    "host='postgres.biocentre.nl' "
+                                    "password='blaat1234'")
 
         try:
             for input_file in self.input_files:
                 output_file = self.convert_to_csv(input_file)
                 dict_, participant = self.read_csv(output_file)
-                profile, condition_symptoms = self.get_conditions_symptoms(dict_)
+                profile, condition_symptoms = \
+                    self.get_conditions_symptoms(dict_)
                 self.pdf_data[participant] = {
-                    "condition_symptoms": condition_symptoms, "profile": profile}
+                    "condition_symptoms": condition_symptoms,
+                    "profile": profile}
                 os.remove(output_file)
 
             pdf_list, conditions_list, patient_ids = self.reformat_data(
                 self.pdf_data)
-        except:
+        except:  # Make sure that the connection in clossed when there's
+            # an exception
             raise
         finally:
             self.conn.close()
-        self.conn.close()
         return pdf_list, conditions_list, patient_ids
 
     def convert_to_csv(self, input_file):
@@ -129,10 +134,6 @@ class PdfReader:
                  race_concept_id, ethnicity_concept_id, person_source_value,
                  gender_source_value, race_source_value,
                  ethnicity_source_value])
-            # person_id, gender_concept_id, year_of_birth,
-            # month_of_birth, race_concept_id, ethnicity_concept_id,
-            # person_source_value, gender_source_value,
-            # race_source_value, ethnicity_source_value
 
             patient_ids[person_source_value] = person_id
 
@@ -144,15 +145,13 @@ class PdfReader:
                 conditions_list.append(
                     [condition_occurrence_id, person_id, condition_concept_id,
                      condition_start_date, condition_type_concept_id])
-                # condition_occurrence_id, person_id,
-                # condition_concept_id, condition_start_date,
-                # condition_type_concept_id
 
         return profile_list, conditions_list, patient_ids
 
     def get_concept_id(self, value):
         """
-        Get the concept id out of the database by looking for the source value in the table mapping
+        Get the concept id out of the database by looking for the source
+        value in the table mapping
         :param value: Source value
         :return: The concept id
         """

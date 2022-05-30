@@ -20,8 +20,8 @@ class VcfReader:
             list[list]: Lists ready for import into to the database.
         """
         self.conn = psycopg.connect("dbname='onderwijs' user='DI_groep_7' "
-                               "host='postgres.biocentre.nl' "
-                               "password='blaat1234'")
+                                    "host='postgres.biocentre.nl' "
+                                    "password='blaat1234'")
         try:
             for input_file in self.input_files:
                 self.read_vcf(file=input_file)
@@ -32,7 +32,8 @@ class VcfReader:
         return self.measurement
 
     def read_vcf(self, file):
-        """Parse values for condition_occurence table in database from vcf files.
+        """Parse values for condition_occurence table in database
+        from vcf files.
         
         Args:
             file (str): Path to the vcf file.
@@ -50,7 +51,7 @@ class VcfReader:
                     new_person_id = self.search_person_id(line)
                     if new_person_id:
                         person_id = new_person_id
-                   
+
                     new_date = self.search_date(line)
                     if new_date:
                         date = new_date
@@ -63,19 +64,19 @@ class VcfReader:
                         # measurement_id
                         int(str(uuid.uuid4().int)[-9:-1]),
                         # person_id
-                        person_id,  
+                        person_id,
                         # concept_id
                         self.get_gene_concept_id(match.group('gene')),
                         # measurement_date
-                        date,  
+                        date,
                         # 'measurement_type_concept_id
                         self.get_concept_id(match.group('type')),
                         # unit_concept_id
-                        37394434,  
+                        37394434,
                         # range_low
-                        match.group('AApos'),  
+                        match.group('AApos'),
                         # range_high
-                        match.group('AAlength'),  
+                        match.group('AAlength'),
                         # measurement_source_value
                         match.group('AAchange')
                     ])
@@ -100,12 +101,13 @@ class VcfReader:
         if match:
             try:
                 return self.patient_ids[
-                    f"{str(match.group('person_id_str'))}-" \
+                    f"{str(match.group('person_id_str'))}-" 
                     f"{str(match.group('person_id_int'))}"]
             except KeyError:
                 raise Exception(
-                    f"Patient with id {str(match.group('person_id_str'))}-" \
-                    f"{str(match.group('person_id_int'))} not found in metadata (pdf) files."
+                    f"Patient with id {str(match.group('person_id_str'))}-"
+                    f"{str(match.group('person_id_int'))} "
+                    f"not found in metadata (pdf) files."
                 )
         else:
             return None
@@ -122,7 +124,9 @@ class VcfReader:
             datetime_object = datetime.datetime.strptime(
                 match.group('month'), "%b")
             month_number = datetime_object.month
-            return datetime.datetime(int(match.group('year')), month_number, int(match.group('day')))
+            return datetime.datetime(int(match.group('year')),
+                                     month_number,
+                                     int(match.group('day')))
         else:
             return None
 
@@ -148,7 +152,8 @@ class VcfReader:
 
     def get_concept_id(self, value):
         """
-        Get the concept id out of the database by looking for the source value in the table mapping
+        Get the concept id out of the database by looking for the
+        source value in the table mapping.
         :param value: Source value
         :return: The concept id
         """
