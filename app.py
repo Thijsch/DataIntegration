@@ -15,25 +15,10 @@ def main():
         "data/10_variants/PGPC_0048_S1_chr21_out_filtered_10.flt.vcf"
     ]
 
-    concept_ids = {
-        "missense": 43020565, 
-        "frameshift": 4209465,
-        "Bipolar disorder": 436665, 
-        "Heartblock secondary catheter ablation for PAT": 43021509, 
-        "Uterine fibroids and polyps": 4147607, 
-        "Epilepsy (7-10 y)": 380378, 
-        "Arthritis": 4291025, 
-        "M": 8507, 
-        "F": 8532, 
-        "White": 8527
-    }
-
-    pdf_reader = PdfReader(input_files=pdf_input_files,
-                           concept_ids=concept_ids)
+    pdf_reader = PdfReader(input_files=pdf_input_files)
     patient_list, conditions_list, patient_ids = pdf_reader.read_pdfs()
 
     vcf_reader = VcfReader(input_files=vcf_input_files,
-                           concept_ids=concept_ids,
                            patient_ids=patient_ids)
     measurement_list = vcf_reader.read_vcfs()
 

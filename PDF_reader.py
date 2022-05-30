@@ -7,9 +7,8 @@ import psycopg
 
 
 class PdfReader:
-    def __init__(self, input_files: list[str], concept_ids):
+    def __init__(self, input_files: list[str]):
         self.input_files = input_files
-        self.concept_ids = concept_ids
         self.pdf_data = {}
 
     def read_pdfs(self) -> tuple[list[list], list[list], dict]:
