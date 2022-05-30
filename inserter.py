@@ -62,7 +62,6 @@ class Inserter:
             postgres_records = self.data_to_insert[table]
             with cursor.copy(query) as copy:
                 for record in postgres_records:
-                    print(record)
                     copy.write_row(record)
 
     def validate(self):
@@ -72,8 +71,11 @@ class Inserter:
                 select count(*) from di_groep_7.{table};
             """)
             rows_in_table = int(cursor.fetchall()[0][0])
-            if not len(data) == rows_in_table:
+            if len(data) > rows_in_table:
                 raise Exception(f'Table {table} was not fully inserted as only {rows_in_table} of {len(data)} rows were inserted.')
+            if len(data) < rows_in_table:
+                raise Warning(f'Table {table} already contained {rows_in_table} rows before inserting. New data was successfully inserted.')
+
 
     def close_connection(self):
         """Close connection to database."""

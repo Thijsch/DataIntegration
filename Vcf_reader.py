@@ -48,9 +48,15 @@ class VcfReader:
                         r'(?P<person_id_int>[0-9]+)',
                         line)
                     if match:
-                        person_id = self.patient_ids[
-                            f"{str(match.group('person_id_str'))}-" \
-                            f"{str(match.group('person_id_int'))}"]
+                        try:
+                            person_id = self.patient_ids[
+                                f"{str(match.group('person_id_str'))}-" \
+                                f"{str(match.group('person_id_int'))}"]
+                        except KeyError:
+                            raise Exception(
+                                f"Patient with id {str(match.group('person_id_str'))}-" \
+                                f"{str(match.group('person_id_int'))} not found in metadata (pdf) files."
+                            )
                     match = match = re.search(
                         r'^##startTime=[A-z]+'
                         r'\s(?P<month>[A-z]{3})'

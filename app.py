@@ -15,10 +15,6 @@ def main():
 
     # TODO aan snakemake toevoegen
     if len(pdf_input_files) != len(vcf_input_files):
-        print(pdf_input_files)
-        print(len(pdf_input_files))
-        print(vcf_input_files)
-        print(len(vcf_input_files))
         raise Exception("Amount of meta data files (pdf) does not match the amount of vcf files.")
 
     pdf_reader = PdfReader(input_files=pdf_input_files)
