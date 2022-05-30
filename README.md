@@ -1,6 +1,7 @@
 # DataIntegration
 
 Orginele dataset.
+
 Voor dit project is er gebruik gemaakt van drie verschillende data van personen. Deze data komt van PersonalGenome (BRON?). De personen die voor dit project gebruikt zijn: PGP13, PGP18 en PGP48. Per persoon is er een PDF bestand waar zij zelf informatie overzich zelf hebben gegeven. Zoals hun lengte, ziektes en medische procedures. Verder is er ook een VCF bestand waar de mutatie per persoon zijn aangegeven.
 
 Om de data van VCF te kunnen gebruiken, is de data door SNPeff gehaald. Deze annoteert de varianten die zich op chromosoon 21 bevinden. Hierna worden er 10 missense variants en ook 10 frameshift variants opgeslagen. Deze woorden ook gebruikt als test data set.
