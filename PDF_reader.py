@@ -37,9 +37,9 @@ class PdfReader:
         try:
             for input_file in self.input_files:
                 output_file = self.convert_to_csv(input_file)
-                dict_, participant = self.read_csv(output_file)
+                pdf_data, participant = self.read_csv(output_file)
                 profile, condition_symptoms = \
-                    self.get_conditions_symptoms(dict_)
+                    self.get_conditions_symptoms(pdf_data)
                 self.pdf_data[participant] = {
                     "condition_symptoms": condition_symptoms,
                     "profile": profile}
@@ -54,37 +54,58 @@ class PdfReader:
             self.conn.close()
         return pdf_list, conditions_list, patient_ids
 
-    def convert_to_csv(self, input_file):
-        """_summary_
+    def convert_to_csv(self, input_file) -> str:
+        """Convert data in pdf to .csv file.
 
         Args:
-            input_file (_type_): _description_
+            input_file (str): input pdf file path.
 
         Returns:
-            _type_: _description_
+            str: output path.
         """
-        out = input_file.split(".")[0] + "_out" + "." + input_file.split(".")[
-            1]
+        out = input_file.split(".")[0] + "_out" + ".csv"
         t.convert_into(input_file, out, pages="all")
         return out
 
-    def read_csv(self, input):
-        pdf = {}
+    def read_csv(self, input) -> tuple[dict, str]:
+        """Retrieve metadata for database table 'person' from csv file.
+
+        Args:
+            input (str): input file.
+
+        Returns:
+            tuple[
+                dict: data from pdf file.
+                str: patient source id.
+            ]
+        """
+        pdf_data = {}
         participant = ""
 
         with open(input) as file:
             for line in file:
                 if line.startswith("Participant"):
-                    pdf[line] = []
+                    pdf_data[line] = []
                 else:
-                    pdf[list(pdf)[-1]].append(line)
+                    pdf_data[list(pdf_data)[-1]].append(line)
                     participant = line.split(",")[0]
-        return pdf, participant
+        return pdf_data, participant
 
-    def get_conditions_symptoms(self, csv):
+    def get_conditions_symptoms(self, pdf_data: dict) -> tuple[list, list]:
+        """Get profile and conditions_symptom from from metadata.
+
+        Args:
+            pdf_data (dict): Data from pdf in csv format.
+
+        Returns:
+            tuple[
+                list: profile.
+                list: condition symptoms.
+            ]
+        """
         conditions_symptom = []
         profile = []
-        for keys, values in csv.items():
+        for keys, values in pdf_data.items():
             if "Conditions or Symptom" in keys:
                 for value in values:
                     conditions_symptom.append(value.strip().split(",")[1])
@@ -94,6 +115,14 @@ class PdfReader:
         return profile, conditions_symptom
 
     def make_csv(self, profile, conditions_symptom, name, participant):
+        """_summary_
+
+        Args:
+            profile (_type_): _description_
+            conditions_symptom (_type_): _description_
+            name (_type_): _description_
+            participant (_type_): _description_
+        """
         file_name = name.split(".")[0] + "_Conditions_or_Symptom" + ".csv"
         with open(file_name, "w") as file:
             file.write(participant + ",")
@@ -141,7 +170,7 @@ class PdfReader:
                 condition_occurrence_id = int(str(uuid.uuid4().int)[-9:-1])
                 condition_concept_id = self.get_concept_id([condition])
                 condition_start_date = datetime(1970, 1, 1)
-                condition_type_concept_id = 0  # TODO uhhhh wat is dit?
+                condition_type_concept_id = self.get_concept_id("Patient Self-Reported Condition")
                 conditions_list.append(
                     [condition_occurrence_id, person_id, condition_concept_id,
                      condition_start_date, condition_type_concept_id])
