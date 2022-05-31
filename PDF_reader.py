@@ -1,3 +1,7 @@
+# Author: David van Eersel & Janneke Nouwen
+# Date: 1-5-22
+# This file reads the PDF files and extracts the important data.
+
 import os
 import uuid
 from datetime import datetime

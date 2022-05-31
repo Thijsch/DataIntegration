@@ -1,4 +1,6 @@
-# pyright: reportUnknownMemberType=false
+# Auhtor: Janneke Nouwen
+# Date: 26-5-22
+# This file inserts the data in to the database.
 import psycopg
 
 

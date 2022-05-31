@@ -1,3 +1,6 @@
+# Author: Janneke Nouwen
+# Date: 1-5-22
+# This file extracts the important information out of the VCF files.
 import datetime
 import re
 import uuid
