@@ -6,13 +6,18 @@ import os
 # import dotenv
 
 # dotenv.load_dotenv(".env")
+import snaketwo
+from snaketwo import snakeextra
+
 
 rule snpEFF:
     """
     Bij deze rule wordt de input door de app snpEFF heen gehaald. Output zal in
     """
-    input: "/home/thijsch/PycharmProjects/DataIntegration/data/vcf_raw/PGPC_0018_S1_chr21.flt.vcf"
-    output: "out"
+    input:
+        "/home/thijsch/PycharmProjects/DataIntegration/data/vcf_raw/PGPC_0018_S1_chr21.flt.vcf"
+    output:
+        "out"
     params:
         path="/home/thijsch/snpEff/snpEff.jar"
     shell:
@@ -24,5 +29,4 @@ rule steptwo:
     """
     input: "out.snpEff.jar"
     run:
-        ""
-
+        """snaketwo.snakeextra()"""
