@@ -23,6 +23,8 @@ Op het moment dat een er niks gevonden kan worden door middel van syntactisch ma
 | PDF_reader.py | Dit bestand bevat een class waarin de PDF’s in gelezen worden. Dit wordt gedaan met tabula. Dit is een package waarmee PDF’s makkelijk ingelezen kunnen worden. Uit de PDF’s wordt de volgende data gehaald: profile en conditions or symptoms. Ook wordt de data gemapped tegen de data in de database. |
 | Vcf_reader.py | Dit bestand bevat een class waarin de VCF’s in gelezen worden. Er worden hier verschillende dingen uit op gehaald: chromosoom nummer, gene, type, positie van het aminozuur, de lengte van het aminozuur en wat de mutatie is. Ook wordt de data gemapped tegen de data in de database. |
 | Inserter.py | Dit bestand vult de database met de data die uit de twee data readers komt.|
+| Snakefile | Roept eerst snpEFF aan om vervolgens de gegevens door te geven aan snaketwo.py |
+| snaketwo.py | Neemt alle data van de VCF files en PDF files. Slaat deze op in database. Verder wordt in deze functie ook een metdata bestand aangemaakt. |
 
 ## Workflow
 ![workflow](https://github.com/Thijsch/DataIntegration/blob/master/workflow_data_integratie.png)
