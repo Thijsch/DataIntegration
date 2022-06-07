@@ -1,12 +1,18 @@
 from PDF_reader import PdfReader
 from Vcf_reader import VcfReader
+from snpeff import SnpEff
 from inserter import Inserter
 import glob
 import os
+import dotenv
 
-
+dotenv.load_dotenv(".env")
 
 def main():
+    snpeff = SnpEff(str(os.getenv("VCF_DIR")), str(os.getenv("SNPEFF_FILE")))
+    snpeff.run()
+    vcf_dir = snpeff.output_path
+
     pdf_dir = str(os.getenv("PDF_DIR"))
     if pdf_dir.endswith("/"):
         pdf_dir = pdf_dir[:-1]
@@ -14,7 +20,6 @@ def main():
         name for name in glob.glob(f'{pdf_dir}/*.pdf')
     ]
 
-    vcf_dir = str(os.getenv("VCF_DIR"))
     if vcf_dir.endswith("/"):
         vcf_dir = vcf_dir[:-1]
 
