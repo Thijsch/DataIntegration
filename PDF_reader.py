@@ -6,9 +6,9 @@ import os
 import uuid
 from datetime import datetime
 
-import tabula as t
 import dotenv
 import psycopg
+import tabula as t
 
 dotenv.load_dotenv(".env")
 

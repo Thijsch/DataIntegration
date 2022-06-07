@@ -1,12 +1,15 @@
-from PDF_reader import PdfReader
-from Vcf_reader import VcfReader
-from snpeff import SnpEff
-from inserter import Inserter
 import glob
 import os
+
 import dotenv
 
+from PDF_reader import PdfReader
+from Vcf_reader import VcfReader
+from inserter import Inserter
+from snpeff import SnpEff
+
 dotenv.load_dotenv(".env")
+
 
 def main():
     snpeff = SnpEff(str(os.getenv("VCF_DIR")), str(os.getenv("SNPEFF_FILE")))

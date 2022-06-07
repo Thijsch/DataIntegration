@@ -1,9 +1,11 @@
 # 23-5-2022
-# Met dit snakefile kan snpEFF gerund worden over de vcf files. Deze data
-# wordt vervolgens ingelezen en in de database gezet
-from pathlib import Path
-import os
+# Thijs Ermens
+# This script will put data gathered by the snpEff with the snakefile into a
+# database
 import glob
+import os
+from pathlib import Path
+
 import dotenv
 
 from PDF_reader import PdfReader
@@ -14,6 +16,10 @@ dotenv.load_dotenv(".env")
 
 
 def snakeextra():
+    """
+    This function will put the data in the map VCF_FILES to the database
+    """
+    # get files
     raw = []
     vcf_dir = str(os.getenv("VCF_FILES"))
     if vcf_dir.endswith("/"):
@@ -45,6 +51,7 @@ def snakeextra():
                            patient_ids=patient_ids)
     measurement_list = vcf_reader.read_vcfs()
 
+    # insert into database
     inserter = Inserter(auto_commit=True, person=patient_list,
                         condition_occurrence=conditions_list,
                         measurement=measurement_list)

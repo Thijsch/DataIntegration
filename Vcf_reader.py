@@ -107,7 +107,7 @@ class VcfReader:
         if match:
             try:
                 return self.patient_ids[
-                    f"{str(match.group('person_id_str'))}-" 
+                    f"{str(match.group('person_id_str'))}-"
                     f"{str(match.group('person_id_int'))}"]
             except KeyError:
                 raise Exception(

@@ -25,7 +25,9 @@ class SnpEff:
         for input_file in input_files:
             self.bash_cmd = [
                 "java", "-Xmx8g", "-jar", f"{self.snpeff_path}", "GRCh37.75", "-no-downstream", "-no-intergenic",
-                "-no-intron", "-no-upstream", "-no-utr", "-verbose", "-noStats", f"{self.input_path}/{input_file}", ">", f"{self.output_path}_out.vcf"
+                "-no-intron", "-no-upstream", "-no-utr", "-verbose",
+                "-noStats", f"{input_file} "
+                            f"> {self.output_path}_out.vcf"
             ]
             processes.append(subprocess.Popen(self.bash_cmd, stdout=subprocess.PIPE))
         
