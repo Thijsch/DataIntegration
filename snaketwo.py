@@ -1,11 +1,9 @@
 # 23-5-2022
-# Thijs Ermens
-# This script will put data gathered by the snpEff with the snakefile into a
-# database
-import glob
-import os
+# Met dit snakefile kan snpEFF gerund worden over de vcf files. Deze data
+# wordt vervolgens ingelezen en in de database gezet
 from pathlib import Path
-
+import os
+import glob
 import dotenv
 
 from PDF_reader import PdfReader
@@ -17,8 +15,9 @@ dotenv.load_dotenv(".env")
 
 def snakeextra():
     """
-    This function will put the data in the map VCF_FILES to the database
+        This function will put the data in the map VCF_FILES to the database
     """
+    get_metadata()
     # get files
     raw = []
     vcf_dir = str(os.getenv("VCF_FILES"))
@@ -58,3 +57,17 @@ def snakeextra():
     inserter.insert_data()
     inserter.validate()
     inserter.close_connection()
+
+
+def get_metadata():
+    """Get metadata for workflow"""
+    metadata = {
+        "time": str(datetime.now()),
+        "vcf files": str(os.getenv("VCF_DIR")),
+        "pdf_files": str(os.getenv("PDF_DIR")),
+        "snpeff file": str(os.getenv("SNPEFF_FILE")),
+        "run by user": str(os.getenv("USER"))
+    }
+
+    with open('metadata.json', 'w') as fp:
+        json.dump(metadata, fp, indent=4)

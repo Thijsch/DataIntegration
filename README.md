@@ -24,6 +24,9 @@ Op het moment dat een er niks gevonden kan worden door middel van syntactisch ma
 | Vcf_reader.py | Dit bestand bevat een class waarin de VCF’s in gelezen worden. Er worden hier verschillende dingen uit op gehaald: chromosoom nummer, gene, type, positie van het aminozuur, de lengte van het aminozuur en wat de mutatie is. Ook wordt de data gemapped tegen de data in de database. |
 | Inserter.py | Dit bestand vult de database met de data die uit de twee data readers komt.|
 
+## Workflow
+![workflow](https://github.com/Thijsch/DataIntegration/blob/master/workflow_data_integratie.png)
+
 ## Bronvermelding
 - Odysseus Data Services. (2015). Athena. Athena. Geraadpleegd op 30 mei 2022, van https://athena.ohdsi.org/
 - Szego, M., & Scherer, S. (z.d.). PGP Canada - Personal Genome Project Canada. PGP Canada - Personal Genome Project Canada. Geraadpleegd op 30 mei 2022, van https://personalgenomes.ca/
